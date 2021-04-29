@@ -1,10 +1,9 @@
 "use strict";
 
-const Users = require("../models/users.js");
 module.exports = (capability) => {
   return (req, res, next) => {
     try {
-      console.log(user);
+      console.log("CAPS", req.user);
       if (req.user.capabilities.includes(capability)) {
         next();
       } else {

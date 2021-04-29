@@ -6,9 +6,9 @@ const supergoose = require("@code-fellows/supergoose");
 const mockRequest = supergoose(server);
 
 let users = {
-  admin: { username: "admin", password: "password", role: "admin" },
-  editor: { username: "editor", password: "password", role: "editor" },
-  user: { username: "user", password: "password", role: "user" },
+  admin: { username: "admin1", password: "password", role: "admin" },
+  editor: { username: "editor1", password: "password", role: "editor" },
+  user: { username: "user1", password: "password", role: "user" },
 };
 
 describe("Auth Router", () => {
@@ -45,7 +45,7 @@ describe("Auth Router", () => {
           .auth(users[userType].username, users[userType].password);
 
         const token = response.body.token;
-
+        console.log("Token is coming through:", token);
         // First, use basic to login to get a token
         const bearerResponse = await mockRequest
           .get("/users")

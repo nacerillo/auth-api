@@ -28,9 +28,24 @@ router.param("model", (req, res, next) => {
 
 router.get("/:model", basicAuth, can("read"), handleGetAll);
 router.get("/:model/:id", bearerAuth, can("read"), handleGetOne);
-router.post("/:model", basicAuth, can("read"), handleCreate);
-router.put("/:model/:id", bearerAuth, can("put"), handleUpdate);
-router.delete("/:model/:id", bearerAuth, can("delete"), handleDelete);
+router.post(
+  "/:model",
+  basicAuth,
+  can("read", "update", "create"),
+  handleCreate
+);
+router.put(
+  "/:model/:id",
+  bearerAuth,
+  can("read", "update", "create"),
+  handleUpdate
+);
+router.delete(
+  "/:model/:id",
+  bearerAuth,
+  can("read", "update", "create", "delete"),
+  handleDelete
+);
 
 async function handleGetAll(req, res) {
   let allRecords = await req.model.get();

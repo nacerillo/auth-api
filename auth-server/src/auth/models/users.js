@@ -3,17 +3,21 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
-const users = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  role: {
-    type: String,
-    required: true,
-    default: "user",
-    enum: ["user", "editor", "admin"],
+const SECRET = "toejam";
+//const acl = require("../middleware/acl");
+const users = new mongoose.Schema(
+  {
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    role: {
+      type: String,
+      required: true,
+      default: "user",
+      enum: ["user", "editor", "admin"],
+    },
   },
-});
+  { toJSON: { virtuals: true } }
+);
 // }, { toObject: { getters: true } }); // What would this do if we use this instead of just });
 
 // Adds a virtual field to the schema. We can see it, but it never persists
@@ -22,16 +26,17 @@ users.virtual("token").get(function () {
   let tokenObject = {
     username: this.username,
   };
-  return jwt.sign(tokenObject, process.env.SECRET);
+  return jwt.sign(tokenObject, SECRET);
 });
 
-users.virtual("capabilites").get(function () {
+users.virtual("capabilities").get(function () {
   let acl = {
     user: ["read"],
     editor: ["read", "create", "update"],
     admin: ["read", "create", "update", "delete"],
   };
-  return acl[this.model];
+  console.log("this.model: ", this.role);
+  return acl[this.role];
 });
 
 users.pre("save", async function () {
@@ -39,6 +44,8 @@ users.pre("save", async function () {
     this.password = await bcrypt.hash(this.password, 10);
   }
 });
+
+users.delete;
 
 // BASIC AUTH
 users.statics.authenticateBasic = async function (username, password) {
@@ -54,7 +61,10 @@ users.statics.authenticateBasic = async function (username, password) {
 
 users.statics.authenticateWithToken = async function (token) {
   try {
-    const parsedToken = jwt.verify(token, process.env.SECRET);
+    console.log("Reaches TOKEN", token);
+    const parsedToken = jwt.verify(token, SECRET);
+    console.log(jwt.verify(token, SECRET));
+    console.log("PARSED TOKEN", parsedToken);
     const user = this.findOne({ username: parsedToken.username });
     if (user) {
       return user;

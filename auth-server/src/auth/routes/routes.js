@@ -31,9 +31,11 @@ authRouter.post("/signin", basicAuth, (req, res, next) => {
 authRouter.get(
   "/users",
   bearerAuth,
-  permissions("delete"),
+  permissions("read"),
   async (req, res, next) => {
+    console.log("DID FIND");
     const users = await User.find({});
+
     const list = users.map((user) => user.username);
     res.status(200).json(list);
   }
