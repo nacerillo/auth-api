@@ -3,7 +3,7 @@
 const fs = require("fs");
 const express = require("express");
 const Collection = require("../models/data-collection.js");
-
+const bearerAuth = require("../middleware/bearer.js");
 const router = express.Router();
 
 const models = new Map();
@@ -26,11 +26,11 @@ router.param("model", (req, res, next) => {
   }
 });
 
-router.get("/:model", handleGetAll);
-router.get("/:model/:id", handleGetOne);
-router.post("/:model", handleCreate);
-router.put("/:model/:id", handleUpdate);
-router.delete("/:model/:id", handleDelete);
+router.get("/:model", basicAuth, can("read"), handleGetAll);
+router.get("/:model/:id", bearerAuth, can("read"), handleGetOne);
+router.post("/:model", basicAuth, can("read"), handleCreate);
+router.put("/:model/:id", bearerAuth, can("put"), handleUpdate);
+router.delete("/:model/:id", bearerAuth, can("delete"), handleDelete);
 
 async function handleGetAll(req, res) {
   let allRecords = await req.model.get();
