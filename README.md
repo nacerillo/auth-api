@@ -8,8 +8,9 @@
 
 ### Links and Resources
 
-- [ci/cd](https://github.com/nacerillo/api-server/actions)
+- [ci/cd](https://github.com/nacerillo/auth-api/tree/main/auth-server/src)
 - [Actions](https://github.com/nacerillo/auth-api/pulls)
+- [Heroku](https://auth-and-api-prod.herokuapp.com/) 
 
 ### Setup
 
