@@ -35,7 +35,7 @@ users.virtual("capabilities").get(function () {
     editor: ["read", "create", "update"],
     admin: ["read", "create", "update", "delete"],
   };
-  console.log("this.model: ", this.role);
+  //console.log("this.model: ", this.role);
   return acl[this.role];
 });
 
@@ -44,8 +44,6 @@ users.pre("save", async function () {
     this.password = await bcrypt.hash(this.password, 10);
   }
 });
-
-users.delete;
 
 // BASIC AUTH
 users.statics.authenticateBasic = async function (username, password) {
@@ -61,10 +59,10 @@ users.statics.authenticateBasic = async function (username, password) {
 
 users.statics.authenticateWithToken = async function (token) {
   try {
-    console.log("Reaches TOKEN", token);
+    //console.log("Reaches TOKEN", token);
     const parsedToken = jwt.verify(token, SECRET);
-    console.log(jwt.verify(token, SECRET));
-    console.log("PARSED TOKEN", parsedToken);
+    // console.log(jwt.verify(token, SECRET));
+    // console.log("PARSED TOKEN", parsedToken);
     const user = this.findOne({ username: parsedToken.username });
     if (user) {
       return user;

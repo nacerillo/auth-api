@@ -33,7 +33,7 @@ authRouter.get(
   bearerAuth,
   permissions("read"),
   async (req, res, next) => {
-    console.log("DID FIND");
+    //console.log("DID FIND");
     const users = await User.find({});
 
     const list = users.map((user) => user.username);
